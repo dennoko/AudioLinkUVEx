@@ -4,61 +4,64 @@ using UnityEngine;
 
 namespace lilToon
 {
-    // シェーダー名の変更は以下 3 箇所をすべて揃えること:
-    //   1. この class 名（TemplateFullInspector → 任意名）
-    //   2. 下の shaderName 定数
-    //   3. Shaders/lilCustomShaderDatas.lilblock の ShaderName タグ・EditorName タグ
-    //   4. Editor/TemplateFull.asmdef の name フィールドとファイル名自体
-    public class TemplateFullInspector : lilToonInspector
+    public class AudioLinkVUMeterInspector : lilToonInspector
     {
-        // Custom properties
-        // ここで MaterialProperty を宣言し、LoadCustomProperties() で FindProperty() する
-        //MaterialProperty customVariable;
+        // Needle properties
+        MaterialProperty _NeedleTex;
+        MaterialProperty _Pivot;
+        MaterialProperty _MinAngle;
+        MaterialProperty _MaxAngle;
+        MaterialProperty _AudioLinkBand;
+        MaterialProperty _AudioLinkDelay;
 
-        private static bool isShowCustomProperties;
-        private const string shaderName = "TemplateFull";
+        // Red zone emission properties
+        MaterialProperty _RedZoneThreshold;
+        MaterialProperty _RedZoneColor;
+
+        private static bool isShowVUMeterProperties;
+        private const string shaderName = "AudioLinkVUMeter";
 
         protected override void LoadCustomProperties(MaterialProperty[] props, Material material)
         {
             isCustomShader = true;
-
-            // If you want to change rendering modes in the editor, specify the shader here
             ReplaceToCustomShaders();
             isShowRenderMode = !material.shader.name.Contains("Optional");
 
-            // If not, set isShowRenderMode to false
-            //isShowRenderMode = false;
-
-            //LoadCustomLanguage("");
-            //customVariable = FindProperty("_CustomVariable", props);
+            _NeedleTex        = FindProperty("_NeedleTex",        props);
+            _Pivot            = FindProperty("_Pivot",            props);
+            _MinAngle         = FindProperty("_MinAngle",         props);
+            _MaxAngle         = FindProperty("_MaxAngle",         props);
+            _AudioLinkBand    = FindProperty("_AudioLinkBand",    props);
+            _AudioLinkDelay   = FindProperty("_AudioLinkDelay",   props);
+            _RedZoneThreshold = FindProperty("_RedZoneThreshold", props);
+            _RedZoneColor     = FindProperty("_RedZoneColor",     props);
         }
 
         protected override void DrawCustomProperties(Material material)
         {
-            // GUIStyles Name   Description
-            // ---------------- ------------------------------------
-            // boxOuter         outer box
-            // boxInnerHalf     inner box
-            // boxInner         inner box without label
-            // customBox        box (similar to unity default box)
-            // customToggleFont label for box
-            //
-            // Helper methods:
-            //   Foldout(label, key, isOpen)      : 折りたたみセクション（bool を返す）
-            //   DrawLine()                        : 区切り線
-            //   DrawWebButton(label, url)         : Web リンクボタン
-            //   LoadCustomLanguage(guid)          : 言語ファイル読み込み（Editor/lang_custom.txt の GUID）
-            //   m_MaterialEditor.ShaderProperty() : 通常プロパティの描画
-            //   m_MaterialEditor.TexturePropertySingleLine() : テクスチャ + インラインプロパティ
-
-            isShowCustomProperties = Foldout("Custom Properties", "Custom Properties", isShowCustomProperties);
-            if(isShowCustomProperties)
+            isShowVUMeterProperties = Foldout("VU Meter Needle", "VU Meter Needle", isShowVUMeterProperties);
+            if (isShowVUMeterProperties)
             {
                 EditorGUILayout.BeginVertical(boxOuter);
-                EditorGUILayout.LabelField(GetLoc("Custom Properties"), customToggleFont);
+                EditorGUILayout.LabelField("VU Meter Needle", customToggleFont);
                 EditorGUILayout.BeginVertical(boxInnerHalf);
 
-                //m_MaterialEditor.ShaderProperty(customVariable, "Custom Variable");
+                m_MaterialEditor.TexturePropertySingleLine(
+                    new GUIContent("Needle Mask", "White = needle, Black = transparent"),
+                    _NeedleTex);
+                m_MaterialEditor.ShaderProperty(_Pivot,            "Pivot (UV)");
+                m_MaterialEditor.ShaderProperty(_MinAngle,         "Min Angle (deg)");
+                m_MaterialEditor.ShaderProperty(_MaxAngle,         "Max Angle (deg)");
+
+                DrawLine();
+
+                m_MaterialEditor.ShaderProperty(_AudioLinkBand,    "AudioLink Band");
+                m_MaterialEditor.ShaderProperty(_AudioLinkDelay,   "AudioLink Delay");
+
+                DrawLine();
+
+                m_MaterialEditor.ShaderProperty(_RedZoneThreshold, "Red Zone Threshold");
+                m_MaterialEditor.ShaderProperty(_RedZoneColor,     "Red Zone Emission Color");
 
                 EditorGUILayout.EndVertical();
                 EditorGUILayout.EndVertical();
@@ -129,23 +132,6 @@ namespace lilToon
             ltsmfur     = Shader.Find("Hidden/" + shaderName + "/MultiFur");
             ltsmgem     = Shader.Find("Hidden/" + shaderName + "/MultiGem");
         }
-
-        // You can create a menu like this
-        /*
-        [MenuItem("Assets/TemplateFull/Convert material to custom shader", false, 1100)]
-        private static void ConvertMaterialToCustomShaderMenu()
-        {
-            if(Selection.objects.Length == 0) return;
-            TemplateFullInspector inspector = new TemplateFullInspector();
-            for(int i = 0; i < Selection.objects.Length; i++)
-            {
-                if(Selection.objects[i] is Material)
-                {
-                    inspector.ConvertMaterialToCustomShader((Material)Selection.objects[i]);
-                }
-            }
-        }
-        */
     }
 }
 #endif

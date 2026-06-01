@@ -13,4 +13,14 @@
         //   [Normal]        : テクスチャを法線マップとして扱う
         //   [HDR]           : カラーをHDR入力として扱う
         //
-        //_CustomVariable ("Custom Variable", Float) = 0
+        // VU Meter Needle
+        [NoScaleOffset] _NeedleTex          ("Needle Mask", 2D) = "white" {}
+        [lilVec3]       _Pivot              ("Pivot (UV)", Vector) = (0.5, 0.5, 0.0, 0.0)
+                        _MinAngle           ("Min Angle (deg)", Float) = -60.0
+                        _MaxAngle           ("Max Angle (deg)", Float) = 60.0
+        [lilEnum]       _AudioLinkBand      ("AudioLink Band|Bass|Low-Mid|High-Mid|Treble", Int) = 0
+        [lilEnum]       _AudioLinkDelay     ("AudioLink Delay|0|1|2|3", Int) = 0
+
+        // Red Zone Emission
+                        _RedZoneThreshold   ("Red Zone Threshold", Range(0.0, 1.0)) = 0.8
+        [HDR]           _RedZoneColor       ("Red Zone Emission Color", Color) = (1.0, 0.0, 0.0, 1.0)
