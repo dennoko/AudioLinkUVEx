@@ -4,9 +4,15 @@ using UnityEngine;
 
 namespace lilToon
 {
+    // シェーダー名の変更は以下 3 箇所をすべて揃えること:
+    //   1. この class 名（TemplateFullInspector → 任意名）
+    //   2. 下の shaderName 定数
+    //   3. Shaders/lilCustomShaderDatas.lilblock の ShaderName タグ・EditorName タグ
+    //   4. Editor/TemplateFull.asmdef の name フィールドとファイル名自体
     public class TemplateFullInspector : lilToonInspector
     {
         // Custom properties
+        // ここで MaterialProperty を宣言し、LoadCustomProperties() で FindProperty() する
         //MaterialProperty customVariable;
 
         private static bool isShowCustomProperties;
@@ -36,6 +42,14 @@ namespace lilToon
             // boxInner         inner box without label
             // customBox        box (similar to unity default box)
             // customToggleFont label for box
+            //
+            // Helper methods:
+            //   Foldout(label, key, isOpen)      : 折りたたみセクション（bool を返す）
+            //   DrawLine()                        : 区切り線
+            //   DrawWebButton(label, url)         : Web リンクボタン
+            //   LoadCustomLanguage(guid)          : 言語ファイル読み込み（Editor/lang_custom.txt の GUID）
+            //   m_MaterialEditor.ShaderProperty() : 通常プロパティの描画
+            //   m_MaterialEditor.TexturePropertySingleLine() : テクスチャ + インラインプロパティ
 
             isShowCustomProperties = Foldout("Custom Properties", "Custom Properties", isShowCustomProperties);
             if(isShowCustomProperties)

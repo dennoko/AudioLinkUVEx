@@ -2,11 +2,15 @@
 // Macro
 
 // Custom variables
+// float・float4 等の通常変数はここに定義する（行末のバックスラッシュを忘れずに）
+// 対応する ShaderLab プロパティは lilCustomShaderProperties.lilblock に記述する
 //#define LIL_CUSTOM_PROPERTIES \
 //    float _CustomVariable;
 #define LIL_CUSTOM_PROPERTIES
 
 // Custom textures
+// TEXTURE2D はここに定義する（SAMPLER は sampler_linear_repeat 等の共有サンプラーを流用可能）
+// 例: TEXTURE2D(_CustomTex); SAMPLER(sampler_CustomTex);
 #define LIL_CUSTOM_TEXTURES
 
 // Add vertex shader input
@@ -36,13 +40,32 @@
 //#define LIL_CUSTOM_V2F_MEMBER(id0,id1,id2,id3,id4,id5,id6,id7)
 
 // Add vertex copy
+// ジオメトリシェーダーを使う場合に定義する
+// appdataCopy 型と appdataOriginalToCopy() 関数が生成され、
+// vertCustom() / geomCustom() を custom_insert_post.hlsl で定義できるようになる
+// 不要な場合はコメントアウト: //#define LIL_CUSTOM_VERT_COPY
 #define LIL_CUSTOM_VERT_COPY
 
 // Inserting a process into the vertex shader
+// LIL_CUSTOM_VERTEX_OS: オブジェクト空間で処理する（positionOS の変形など）
+//   使用可能な変数: inout appdata input, inout float2 uvMain, inout float4 positionOS
+// LIL_CUSTOM_VERTEX_WS: ワールド空間で処理する
+//   使用可能な変数: inout appdata input, inout float2 uvMain,
+//                  inout lilVertexPositionInputs vertexInput,
+//                  inout lilVertexNormalInputs vertexNormalInput
 //#define LIL_CUSTOM_VERTEX_OS
 //#define LIL_CUSTOM_VERTEX_WS
 
 // Inserting a process into pixel shader
+// BEFORE_xx : 指定処理の直前に割り込む  例: #define BEFORE_EMISSION_1ST fd.emissionColor.rgb *= 2.0;
+// OVERRIDE_xx: 指定処理を完全に上書きする  例: #define OVERRIDE_OUTPUT return float4(fd.col.rgb, 1.0);
+// xx に入るキーワード（処理順）:
+//   UNPACK_V2F / ANIMATE_MAIN_UV / ANIMATE_OUTLINE_UV / PARALLAX / MAIN / OUTLINE_COLOR /
+//   FUR / ALPHAMASK / DISSOLVE / NORMAL_1ST / NORMAL_2ND / ANISOTROPY / AUDIOLINK /
+//   MAIN2ND / MAIN3RD / SHADOW / BACKLIGHT / REFRACTION / REFLECTION /
+//   MATCAP / MATCAP_2ND / RIMLIGHT / GLITTER / EMISSION_1ST / EMISSION_2ND /
+//   DISSOLVE_ADD / BLEND_EMISSION / DISTANCE_FADE / FOG / OUTPUT
+// ピクセルシェーダー内では lilFragData fd のメンバーを読み書きする（下記リファレンス参照）
 //#define BEFORE_xx
 //#define OVERRIDE_xx
 

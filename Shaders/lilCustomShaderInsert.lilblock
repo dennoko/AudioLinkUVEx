@@ -1,1 +1,7 @@
+// lilSubShaderInsert で読み込まれるブロック（Unity ライブラリ #include 直後に挿入）
+// パス判別マクロの詳細は custom_insert.hlsl のコメントを参照
+//
+// ジオメトリシェーダー（vertCustom / geomCustom）を定義する場合は
+// vert() の後に挿入が必要なため lilSubShaderInsertPost を使い
+// lilCustomShaderInsertPost.lilblock → custom_insert_post.hlsl に書くこと
 #include "custom_insert.hlsl"

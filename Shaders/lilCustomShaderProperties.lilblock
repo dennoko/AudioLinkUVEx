@@ -1,4 +1,16 @@
 
         //----------------------------------------------------------------------------------------------------------------------
         // Custom Properties
+        // ここに追加したプロパティに対応する HLSL 変数を custom.hlsl の
+        // LIL_CUSTOM_PROPERTIES / LIL_CUSTOM_TEXTURES に定義すること
+        //
+        // よく使うアトリビュート:
+        //   [lilVec3]       : xyz を Vector3 として表示（w は表示しない）
+        //   [lilVec3Float]  : xyz を Vector3, w を Float として表示
+        //   [lilEnum]       : 整数をドロップダウンで表示  例: [lilEnum] _Mode ("Mode|A|B|C", Int) = 0
+        //   [lilToggle]     : 0/1 をトグルで表示
+        //   [NoScaleOffset] : テクスチャのタイリング・オフセット欄を非表示
+        //   [Normal]        : テクスチャを法線マップとして扱う
+        //   [HDR]           : カラーをHDR入力として扱う
+        //
         //_CustomVariable ("Custom Variable", Float) = 0
