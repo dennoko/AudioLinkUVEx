@@ -4,8 +4,10 @@
 // Custom variables
 #define LIL_CUSTOM_PROPERTIES \
     float4  _Pivot;           \
+    float4  _PivotOffset;     \
     float   _MinAngle;        \
     float   _MaxAngle;        \
+    float   _AngleOffset;     \
     float   _AudioLinkBand;   \
     float   _AudioLinkDelay;  \
     float   _RedZoneThreshold;\
@@ -65,14 +67,15 @@
     { \
         float2 _alUV = float2((_AudioLinkBand + 0.5) / 128.0, (_AudioLinkDelay + 0.5) / 64.0); \
         float _alVol = LIL_SAMPLE_2D(_AudioTexture, sampler_linear_clamp, _alUV).r; \
-        float _angleRad = lerp(_MinAngle, _MaxAngle, _alVol) * (LIL_PI / 180.0); \
+        float _angleRad = (lerp(_MinAngle, _MaxAngle, _alVol) + _AngleOffset) * (LIL_PI / 180.0); \
         float _sinA, _cosA; \
         sincos(_angleRad, _sinA, _cosA); \
-        float2 _shiftedUV = fd.uvMain - _Pivot.xy; \
+        float2 _effectivePivot = _Pivot.xy + _PivotOffset.xy; \
+        float2 _shiftedUV = fd.uvMain - _effectivePivot; \
         float2 _rotUV; \
         _rotUV.x = _shiftedUV.x * _cosA - _shiftedUV.y * _sinA; \
         _rotUV.y = _shiftedUV.x * _sinA + _shiftedUV.y * _cosA; \
-        _rotUV += _Pivot.xy; \
+        _rotUV += _effectivePivot; \
         fd.col.a *= LIL_SAMPLE_2D(_NeedleTex, sampler_linear_clamp, _rotUV).r; \
     }
 
@@ -89,14 +92,15 @@
 #define BEFORE_ALPHAMASK \
     { \
         float _alVol = 0.5 + 0.5 * sin(_Time.y); \
-        float _angleRad = lerp(_MinAngle, _MaxAngle, _alVol) * (LIL_PI / 180.0); \
+        float _angleRad = (lerp(_MinAngle, _MaxAngle, _alVol) + _AngleOffset) * (LIL_PI / 180.0); \
         float _sinA, _cosA; \
         sincos(_angleRad, _sinA, _cosA); \
-        float2 _shiftedUV = fd.uvMain - _Pivot.xy; \
+        float2 _effectivePivot = _Pivot.xy + _PivotOffset.xy; \
+        float2 _shiftedUV = fd.uvMain - _effectivePivot; \
         float2 _rotUV; \
         _rotUV.x = _shiftedUV.x * _cosA - _shiftedUV.y * _sinA; \
         _rotUV.y = _shiftedUV.x * _sinA + _shiftedUV.y * _cosA; \
-        _rotUV += _Pivot.xy; \
+        _rotUV += _effectivePivot; \
         fd.col.a *= LIL_SAMPLE_2D(_NeedleTex, sampler_linear_clamp, _rotUV).r; \
     }
 

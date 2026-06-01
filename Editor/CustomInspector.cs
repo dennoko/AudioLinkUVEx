@@ -9,8 +9,10 @@ namespace lilToon
         // Needle properties
         MaterialProperty _NeedleTex;
         MaterialProperty _Pivot;
+        MaterialProperty _PivotOffset;
         MaterialProperty _MinAngle;
         MaterialProperty _MaxAngle;
+        MaterialProperty _AngleOffset;
         MaterialProperty _AudioLinkBand;
         MaterialProperty _AudioLinkDelay;
 
@@ -29,8 +31,10 @@ namespace lilToon
 
             _NeedleTex        = FindProperty("_NeedleTex",        props);
             _Pivot            = FindProperty("_Pivot",            props);
+            _PivotOffset      = FindProperty("_PivotOffset",      props);
             _MinAngle         = FindProperty("_MinAngle",         props);
             _MaxAngle         = FindProperty("_MaxAngle",         props);
+            _AngleOffset      = FindProperty("_AngleOffset",      props);
             _AudioLinkBand    = FindProperty("_AudioLinkBand",    props);
             _AudioLinkDelay   = FindProperty("_AudioLinkDelay",   props);
             _RedZoneThreshold = FindProperty("_RedZoneThreshold", props);
@@ -50,8 +54,10 @@ namespace lilToon
                     new GUIContent("Needle Mask", "White = needle, Black = transparent"),
                     _NeedleTex);
                 m_MaterialEditor.ShaderProperty(_Pivot,            "Pivot (UV)");
+                m_MaterialEditor.ShaderProperty(_PivotOffset,      "Pivot Offset (UV)");
                 m_MaterialEditor.ShaderProperty(_MinAngle,         "Min Angle (deg)");
                 m_MaterialEditor.ShaderProperty(_MaxAngle,         "Max Angle (deg)");
+                m_MaterialEditor.ShaderProperty(_AngleOffset,      "Angle Offset (deg)");
 
                 DrawLine();
 

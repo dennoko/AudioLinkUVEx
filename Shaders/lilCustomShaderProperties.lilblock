@@ -16,8 +16,10 @@
         // VU Meter Needle
         [NoScaleOffset] _NeedleTex          ("Needle Mask", 2D) = "white" {}
         [lilVec3]       _Pivot              ("Pivot (UV)", Vector) = (0.5, 0.5, 0.0, 0.0)
+        [lilVec3]       _PivotOffset        ("Pivot Offset (UV)", Vector) = (0.0, 0.0, 0.0, 0.0)
                         _MinAngle           ("Min Angle (deg)", Float) = -60.0
                         _MaxAngle           ("Max Angle (deg)", Float) = 60.0
+                        _AngleOffset        ("Angle Offset (deg)", Float) = 0.0
         [lilEnum]       _AudioLinkBand      ("AudioLink Band|Bass|Low-Mid|High-Mid|Treble", Int) = 0
         [lilEnum]       _AudioLinkDelay     ("AudioLink Delay|0|1|2|3", Int) = 0
 
